@@ -1,0 +1,11 @@
+
+/Library/
+/Logs/
+/Temp/
+/*.sln
+/.vs/
+/.vscode/
+.fuse_hidden*
+/*.csproj
+/obj/
+/Build/
