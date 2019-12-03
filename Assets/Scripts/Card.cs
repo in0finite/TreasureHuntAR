@@ -9,21 +9,18 @@ namespace TreasureHunt
     {
         public GameObject cover, card;
 
-
-        //Color m_color;
-
-       // public Color CardColor { get => m_color; set { m_color = value; card.GetComponentInChildren<Renderer>().material.color = value; } }
-
         public int MatchId { get; set; }
         public Texture2D CardTexture { set { card.GetComponentInChildren<Renderer>().material.mainTexture = value; } }
 
-        private bool isRotating = false;
+        public bool IsRotating { get; set; } = false;
+
+
 
         public void AnimateFlip(float animationTime) {
-            if (isRotating) {
+            if (IsRotating) {
                 return;
             }
-            isRotating = true;
+            IsRotating = true;
             StartCoroutine(AnimateCoroutine(animationTime));
         }
 
@@ -38,7 +35,7 @@ namespace TreasureHunt
             } 
             currentAngles.x = finalAngleX;
             this.transform.eulerAngles = currentAngles;
-            isRotating = false;
+            IsRotating = false;
         }
 
         // Start is called before the first frame update

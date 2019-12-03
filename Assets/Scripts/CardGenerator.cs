@@ -82,6 +82,8 @@ namespace TreasureHunt
         {
             if (! m_isSelectionAllowed)
                 return;
+            if (card.IsRotating)
+                return;
             
             if (null == m_activeCard)
             {
@@ -107,7 +109,7 @@ namespace TreasureHunt
                     {
                         // they match
                         // destroy them
-                        Debug.LogFormat("cards match");
+                        //Debug.LogFormat("cards match");
                         m_secondCard = card;
                         m_isSelectionAllowed = false;
                         Invoke(nameof(DestroyCards), this.pauseInterval);
@@ -116,7 +118,7 @@ namespace TreasureHunt
                     {
                         // the don't match
                         // return both cards
-                        Debug.LogFormat("cards dont match, id1 {0}, id2 {1}", m_activeCard.MatchId, card.MatchId);
+                        //Debug.LogFormat("cards dont match, id1 {0}, id2 {1}", m_activeCard.MatchId, card.MatchId);
                         m_secondCard = card;
                         m_isSelectionAllowed = false;
                         Invoke(nameof(ReturnCards), this.pauseInterval);
