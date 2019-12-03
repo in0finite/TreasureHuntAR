@@ -14,13 +14,20 @@ namespace TreasureHunt
 
         public float spaceBetween = 0.3f;
 
+        public float flipDuration = 2;
+
+        public float pauseInterval = 2f;
+
         List<GameObject> m_cards = new List<GameObject>();
 
-        public List<Color> colors = new List<Color>();
+        //public List<Color> colors = new List<Color>();
+        List<int> m_matchIds = Enumerable.Range(0, 6).ToList();
 
         Card m_activeCard, m_secondCard;
 
         bool m_isSelectionAllowed = true;
+
+        public List<Texture2D> cardTextures = new List<Texture2D>();
 
 
 
@@ -34,8 +41,8 @@ namespace TreasureHunt
             //     colors.Add(color);
             // }
 
-            colors.AddRange(colors.ToArray());
-            Shuffle(colors);
+            m_matchIds.AddRange(m_matchIds.ToArray());
+            Shuffle(m_matchIds);
             
             
 
@@ -46,7 +53,8 @@ namespace TreasureHunt
                     var go = Instantiate(this.cardPrefab);
                     var card = go.GetComponent<Card>();
                     go.transform.position = new Vector3(i * (card.cover.transform.lossyScale.x + spaceBetween), 0, j * (card.cover.transform.lossyScale.y + spaceBetween));
-                    card.CardColor = colors[i * mapHeight + j];
+                    card.MatchId = m_matchIds[i * mapHeight + j];
+                    card.CardTexture = this.cardTextures[card.MatchId];
                     m_cards.Add(go);
                 }
                 
@@ -95,23 +103,23 @@ namespace TreasureHunt
                     FlipCard(card);
                     
                     // check if they match
-                    if (card.CardColor == m_activeCard.CardColor)
+                    if (card.MatchId == m_activeCard.MatchId)
                     {
                         // they match
                         // destroy them
                         Debug.LogFormat("cards match");
                         m_secondCard = card;
                         m_isSelectionAllowed = false;
-                        Invoke(nameof(DestroyCards), 3f);
+                        Invoke(nameof(DestroyCards), this.pauseInterval);
                     }
                     else
                     {
                         // the don't match
                         // return both cards
-                        Debug.LogFormat("cards dont match, color1 {0}, color2 {1}", m_activeCard.CardColor, card.CardColor);
+                        Debug.LogFormat("cards dont match, id1 {0}, id2 {1}", m_activeCard.MatchId, card.MatchId);
                         m_secondCard = card;
                         m_isSelectionAllowed = false;
-                        Invoke(nameof(ReturnCards), 3f);
+                        Invoke(nameof(ReturnCards), this.pauseInterval);
                     }
 
                 }
@@ -119,11 +127,12 @@ namespace TreasureHunt
             
         }
 
-        static void FlipCard(Card card)
+        void FlipCard(Card card)
         {
-            Vector3 eulers = card.transform.eulerAngles;
-            eulers.x -= 180;
-            card.transform.eulerAngles = eulers;
+            // Vector3 eulers = card.transform.eulerAngles;
+            // eulers.x -= 180;
+            // card.transform.eulerAngles = eulers;
+            card.AnimateFlip(this.flipDuration);
         }
 
         void DestroyCards()
