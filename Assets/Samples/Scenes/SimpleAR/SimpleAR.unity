@@ -574,7 +574,7 @@ MonoBehaviour:
   mapWidth: 3
   mapHeight: 4
   spaceBetween: 0.1
-  flipDuration: 0.5
+  flipDuration: 0.4
   pauseInterval: 1
   cardTextures:
   - {fileID: 2800000, guid: b1ed949bd1f732a4d937a6730e5f6b9c, type: 3}
