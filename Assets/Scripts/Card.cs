@@ -10,7 +10,7 @@ namespace TreasureHunt
         public GameObject cover, card;
 
         public int MatchId { get; set; }
-        public Texture2D CardTexture { set { card.GetComponentInChildren<Renderer>().material.mainTexture = value; } }
+        public Texture2D CardTexture { get; set; }
 
         public bool IsRotating { get; set; } = false;
 
@@ -25,6 +25,9 @@ namespace TreasureHunt
         }
 
         private IEnumerator AnimateCoroutine(float animationTime) {
+            
+            AssignTexture(this.CardTexture);
+
             float currentTime = Time.time;
             Vector3 currentAngles = this.transform.eulerAngles;
             float finalAngleX = currentAngles.x + 180;
@@ -35,13 +38,26 @@ namespace TreasureHunt
             } 
             currentAngles.x = finalAngleX;
             this.transform.eulerAngles = currentAngles;
+
             IsRotating = false;
+
+            bool isVisible = this.transform.forward.y > 0;
+            if (isVisible)
+                AssignTexture(this.CardTexture);
+            else
+                AssignTexture(null);
+            
+        }
+
+        void AssignTexture(Texture2D tex)
+        {
+            this.card.GetComponentInChildren<Renderer>().material.mainTexture = tex;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            
+            AssignTexture(null);
         }
 
     }
