@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TreasureHunt
 {
 
-    public class TreasureHuntManager : MonoBehaviour
+    public class TreasureHuntManager : InputInteractionBase
     {
         public SpatialAnchorManager CloudManager = null;
 
@@ -25,9 +25,11 @@ namespace TreasureHunt
         protected CloudSpatialAnchorWatcher currentWatcher;
 
         // Start is called before the first frame update
-        async void Start()
+        async new void Start()
         {
             
+            base.Start();
+
             Debug.LogFormat("Creating session");
 
             if (CloudManager.Session == null)
@@ -175,6 +177,83 @@ namespace TreasureHunt
                 return null;
             }
         }
+
+
+
+        protected override void OnSelectObjectInteraction(Vector3 hitPoint, object target)
+        {
+            if (IsPlacingObject())
+            {
+                Quaternion rotation = Quaternion.AngleAxis(0, Vector3.up);
+
+                SpawnOrMoveCurrentAnchoredObject(hitPoint, rotation);
+
+                Debug.LogFormat("saving to cloud");
+
+                SaveCurrentObjectAnchorToCloudAsync().Wait();
+            }
+        }
+
+        public bool IsPlacingObject()
+        {
+            return true;
+        }
+
+
+        protected virtual async Task SaveCurrentObjectAnchorToCloudAsync()
+        {
+            // Get the cloud-native anchor behavior
+            CloudNativeAnchor cna = spawnedObject.GetComponent<CloudNativeAnchor>();
+
+            // If the cloud portion of the anchor hasn't been created yet, create it
+            if (cna.CloudAnchor == null) { cna.NativeToCloud(); }
+
+            // Get the cloud portion of the anchor
+            CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
+
+            // In this sample app we delete the cloud anchor explicitly, but here we show how to set an anchor to expire automatically
+            // cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
+
+            while (!CloudManager.IsReadyForCreate)
+            {
+                await Task.Delay(330);
+                float createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
+                //feedbackBox.text = $"Move your device to capture more environment data: {createProgress:0%}";
+            }
+
+            bool success = false;
+
+            //feedbackBox.text = "Saving...";
+
+            try
+            {
+                // Actually save
+                await CloudManager.CreateAnchorAsync(cloudAnchor);
+
+                // Store
+                currentCloudAnchor = cloudAnchor;
+
+                // Success?
+                success = currentCloudAnchor != null;
+
+                if (success)
+                {
+                    // Await override, which may perform additional tasks
+                    // such as storing the key in the AnchorExchanger
+                //    await OnSaveCloudAnchorSuccessfulAsync();
+                }
+                else
+                {
+                //    OnSaveCloudAnchorFailed(new Exception("Failed to save, but no exception was thrown."));
+                    Debug.LogError("Failed to save, but no exception was thrown.");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError(ex);
+            }
+        }
+
 
     }
 
