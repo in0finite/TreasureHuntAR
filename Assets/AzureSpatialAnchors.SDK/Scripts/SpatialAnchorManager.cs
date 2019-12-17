@@ -687,8 +687,12 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
                 return;
             }
 
+            Debug.LogFormat("ensuring valid cfg");
+
             // Only allow a session to be created the manager is properly configured.
             await EnsureValidConfiguration(disable: false, exception: true);
+
+            Debug.LogFormat("ensured valid cfg");
 
 #if UNITY_ANDROID // Android Only
             // We should only run the Java initialization once
@@ -703,24 +707,45 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
                 // on a Java thread provided by Android.
                 AndroidHelper.Instance.DispatchUiThread(unityActivity =>
                 {
-                    // Create the plugin
-                    using (AndroidJavaClass cloudServices = new AndroidJavaClass("com.microsoft.CloudServices"))
+                    try
                     {
-                        // Initialize the plugin
-                        cloudServices.CallStatic("initialize", unityActivity);
+                        Debug.LogFormat("running in java UI thread");
 
-                        // Update static variable to say that the plugin has been initialized
-                        javaInitialized = true;
+                        // Create the plugin
+                        using (AndroidJavaClass cloudServices = new AndroidJavaClass("com.microsoft.CloudServices"))
+                        {
+                            Debug.LogFormat("created java class");
 
-                        // Set the task completion source so the CreateSession method can
-                        // continue back on the Unity thread.
-                        pluginInit.SetResult(true);
+                            // Initialize the plugin
+                            cloudServices.CallStatic("initialize", unityActivity);
+
+                            Debug.LogFormat("static method finished");
+
+                            // Update static variable to say that the plugin has been initialized
+                            javaInitialized = true;
+
+                            // Set the task completion source so the CreateSession method can
+                            // continue back on the Unity thread.
+                            pluginInit.SetResult(true);
+
+                            Debug.LogFormat("set result finished");
+                            
+                        }
+                    }
+                    catch(System.Exception ex)
+                    {
+                        Debug.LogError(ex);
                     }
                 });
+
+                Debug.LogFormat("waiting for plugin init");
 
                 // Wait for the plugin to complete initialization on the
                 // Java thread.
                 await pluginInit.Task;
+
+                Debug.LogFormat("plugin init complete");
+
             }
 #endif
 
@@ -728,6 +753,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
             // Ask for ar frames to process
             arCameraManager.frameReceived += ArCameraManager_frameReceived;
 #endif
+
+            Debug.LogFormat("creating session instance");
 
             // Create the session instance
             session = new CloudSpatialAnchorSession();
@@ -754,6 +781,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
             session.AnchorLocated += OnAnchorLocated;
             session.LocateAnchorsCompleted += OnLocateAnchorsCompleted;
             session.Error += OnError;
+
+            Debug.LogFormat("session configured");
 
 #if UNITY_ANDROID || UNITY_IOS
             session.Session = arSession.subsystem.nativePtr.GetPlatformPointer();

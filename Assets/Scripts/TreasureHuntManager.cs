@@ -3,6 +3,7 @@ using Microsoft.Azure.SpatialAnchors.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace TreasureHunt
 {
@@ -24,12 +25,18 @@ namespace TreasureHunt
         protected CloudSpatialAnchorWatcher currentWatcher;
 
         // Start is called before the first frame update
-        void Start()
+        async void Start()
         {
+            
+            Debug.LogFormat("Creating session");
+
             if (CloudManager.Session == null)
             {
-                CloudManager.CreateSessionAsync().Wait();
+                await CloudManager.CreateSessionAsync();
             }
+
+            Debug.LogFormat("Session created");
+
             currentAnchorId = "";
             currentCloudAnchor = null;
 
@@ -37,11 +44,16 @@ namespace TreasureHunt
 
             anchorLocateCriteria.Identifiers = new string[0];
 
-            CloudManager.StartSessionAsync().Wait();
+            await CloudManager.StartSessionAsync();
+
+            Debug.LogFormat("Started session");
 
             currentWatcher = CreateWatcher();
 
+            Debug.LogFormat("Created watcher");
+
             CloudManager.AnchorLocated += CloudManager_AnchorLocated;
+
         }
 
         private void CloudManager_AnchorLocated(object sender, AnchorLocatedEventArgs args)
