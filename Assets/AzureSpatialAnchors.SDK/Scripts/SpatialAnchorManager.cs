@@ -1043,6 +1043,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity
         {
             get
             {
+
                 return ((session != null) && (session.GetActiveWatchers().Count > 0));
             }
         }
