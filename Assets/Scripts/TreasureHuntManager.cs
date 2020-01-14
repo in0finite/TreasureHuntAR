@@ -96,8 +96,6 @@ namespace TreasureHunt
                 // Use factory method to create
                 spawnedObject = SpawnNewAnchoredObject(worldPos, worldRot, currentCloudAnchor);
 
-                // Update color
-                spawnedObjectMat = spawnedObject.GetComponent<MeshRenderer>().material;
             }
             else
             {
@@ -143,9 +141,6 @@ namespace TreasureHunt
                 cloudNativeAnchor.CloudToNative(cloudSpatialAnchor);
             }
 
-            // Set color
-            newGameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
-
             // Return newly created object
             return newGameObject;
         }
@@ -158,9 +153,6 @@ namespace TreasureHunt
             // Attach a cloud-native anchor behavior to help keep cloud
             // and native anchors in sync.
             newGameObject.AddComponent<CloudNativeAnchor>();
-
-            // Set the color
-            newGameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
 
             // Return created object
             return newGameObject;
