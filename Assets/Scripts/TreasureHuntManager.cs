@@ -25,7 +25,7 @@ namespace TreasureHunt
         protected CloudSpatialAnchorWatcher currentWatcher;
 
         // Start is called before the first frame update
-        async new void Start()
+        new async void Start()
         {
             
             base.Start();
@@ -53,6 +53,7 @@ namespace TreasureHunt
             currentWatcher = CreateWatcher();
 
             Debug.LogFormat("Created watcher");
+            Debug.LogFormat("watcher null: {0}", currentWatcher == null);
 
             CloudManager.AnchorLocated += CloudManager_AnchorLocated;
 
@@ -96,8 +97,7 @@ namespace TreasureHunt
                 // Use factory method to create
                 spawnedObject = SpawnNewAnchoredObject(worldPos, worldRot, currentCloudAnchor);
 
-                // Update color
-                spawnedObjectMat = spawnedObject.GetComponent<MeshRenderer>().material;
+                Debug.LogFormat("Spawned object is null: {0}", spawnedObject == null);
             }
             else
             {
@@ -143,9 +143,6 @@ namespace TreasureHunt
                 cloudNativeAnchor.CloudToNative(cloudSpatialAnchor);
             }
 
-            // Set color
-            newGameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
-
             // Return newly created object
             return newGameObject;
         }
@@ -158,9 +155,6 @@ namespace TreasureHunt
             // Attach a cloud-native anchor behavior to help keep cloud
             // and native anchors in sync.
             newGameObject.AddComponent<CloudNativeAnchor>();
-
-            // Set the color
-            newGameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
 
             // Return created object
             return newGameObject;
@@ -182,6 +176,8 @@ namespace TreasureHunt
 
         protected override void OnSelectObjectInteraction(Vector3 hitPoint, object target)
         {
+            Debug.LogFormat("Touch");
+
             if (IsPlacingObject())
             {
                 Quaternion rotation = Quaternion.AngleAxis(0, Vector3.up);
@@ -202,11 +198,21 @@ namespace TreasureHunt
 
         protected virtual async Task SaveCurrentObjectAnchorToCloudAsync()
         {
+            Debug.LogFormat("Saving anchor");
+
             // Get the cloud-native anchor behavior
             CloudNativeAnchor cna = spawnedObject.GetComponent<CloudNativeAnchor>();
 
+
+
             // If the cloud portion of the anchor hasn't been created yet, create it
-            if (cna.CloudAnchor == null) { cna.NativeToCloud(); }
+            if (cna.CloudAnchor == null)
+            {
+                
+                Debug.LogFormat("Cloud anchor null");
+
+                cna.NativeToCloud();
+            }
 
             // Get the cloud portion of the anchor
             CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
@@ -214,12 +220,18 @@ namespace TreasureHunt
             // In this sample app we delete the cloud anchor explicitly, but here we show how to set an anchor to expire automatically
             // cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
 
+            Debug.Log("Waiting to be ready to create");
+
             while (!CloudManager.IsReadyForCreate)
             {
                 await Task.Delay(330);
                 float createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
+                Debug.LogFormat("Create progress: {0}", createProgress);
                 //feedbackBox.text = $"Move your device to capture more environment data: {createProgress:0%}";
             }
+
+
+            Debug.LogFormat("Ready to create");
 
             bool success = false;
 
@@ -230,11 +242,14 @@ namespace TreasureHunt
                 // Actually save
                 await CloudManager.CreateAnchorAsync(cloudAnchor);
 
+                Debug.LogFormat("Created anchor");
                 // Store
                 currentCloudAnchor = cloudAnchor;
 
                 // Success?
                 success = currentCloudAnchor != null;
+
+                Debug.LogFormat("Success: {0}", success);
 
                 if (success)
                 {
