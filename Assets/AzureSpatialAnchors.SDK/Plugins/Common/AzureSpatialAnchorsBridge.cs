@@ -10213,7 +10213,7 @@ namespace Microsoft.Azure.SpatialAnchors
         {
             get
             {
-                float result;
+                float result = 10;
                 NativeLibraryHelpers.CheckStatus(this.handle, NativeLibrary.ssc_session_status_get_recommended_for_create_progress(this.handle, out result));
                 return result;
             }

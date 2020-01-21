@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.SpatialAnchors;
+﻿using System;
+using Microsoft.Azure.SpatialAnchors;
 using Microsoft.Azure.SpatialAnchors.Unity;
 using System.Collections;
 using System.Collections.Generic;
@@ -186,7 +187,7 @@ namespace TreasureHunt
 
                 Debug.LogFormat("saving to cloud");
 
-                SaveCurrentObjectAnchorToCloudAsync().Wait();
+                Task.Run(async () => await SaveCurrentObjectAnchorToCloudAsync());
             }
         }
 
@@ -221,13 +222,21 @@ namespace TreasureHunt
             // cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
 
             Debug.Log("Waiting to be ready to create");
+            Debug.Log(CloudManager.SessionStatus.RecommendedForCreateProgress);
 
-            while (!CloudManager.IsReadyForCreate)
+            try
             {
-                await Task.Delay(330);
-                float createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
-                Debug.LogFormat("Create progress: {0}", createProgress);
-                //feedbackBox.text = $"Move your device to capture more environment data: {createProgress:0%}";
+                while (!CloudManager.IsReadyForCreate)
+                {
+                    await Task.Delay(330);
+                    float createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
+                    Debug.LogFormat("Create progress: {0}", createProgress);
+                    //feedbackBox.text = $"Move your device to capture more environment data: {createProgress:0%}";
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.Log(exc);
             }
 
 

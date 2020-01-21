@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -15,7 +16,7 @@ namespace TreasureHunt
         {
             if (Application.isMobilePlatform)
             {
-                m_outputFile = new StreamWriter(Path.Combine(Application.persistentDataPath, "TreasureHuntLog.txt"));
+                m_outputFile = new StreamWriter(Path.Combine(Application.persistentDataPath, $"TreasureHuntLog{DateTime.Now.Ticks}.txt"));
                 Application.logMessageReceivedThreaded += this.OnLog;
             }
         }
