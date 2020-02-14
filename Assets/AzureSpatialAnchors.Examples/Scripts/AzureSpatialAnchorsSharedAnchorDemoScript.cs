@@ -285,7 +285,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             base.OnSaveCloudAnchorFailed(exception);
         }
 
-        public async override Task AdvanceDemoAsync()
+        public async /*override*/ Task AdvanceDemoAsync()
         {
             if (currentAppState == AppState.DemoStepChooseFlow || currentAppState == AppState.DemoStepInputAnchorNumber)
             {

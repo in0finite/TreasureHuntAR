@@ -244,7 +244,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             #endif
         }
 
-        public async override Task AdvanceDemoAsync()
+        public async /*override*/ Task AdvanceDemoAsync()
         {
             switch (currentAppState)
             {

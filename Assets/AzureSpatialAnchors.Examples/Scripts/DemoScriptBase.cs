@@ -118,25 +118,25 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// <returns>
         /// A <see cref="Task"/> that represents the operation.
         /// </returns>
-        public abstract Task AdvanceDemoAsync();
+//        public abstract Task AdvanceDemoAsync();
 
         /// <summary>
         /// This version only exists for Unity to wire up a button click to.
         /// If calling from code, please use the Async version above.
         /// </summary>
-        public async void AdvanceDemo()
-        {
-            try
-            {
-                advanceDemoTask = AdvanceDemoAsync();
-                await advanceDemoTask;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"{nameof(DemoScriptBase)} - Error in {nameof(AdvanceDemo)}: {ex.Message} {ex.StackTrace}");
-                feedbackBox.text = $"Demo failed, check debugger output for more information";
-            }
-        }
+//        public async void AdvanceDemo()
+//        {
+//            try
+//            {
+//                advanceDemoTask = AdvanceDemoAsync();
+//                await advanceDemoTask;
+//            }
+//            catch (Exception ex)
+//            {
+//                Debug.LogError($"{nameof(DemoScriptBase)} - Error in {nameof(AdvanceDemo)}: {ex.Message} {ex.StackTrace}");
+//                feedbackBox.text = $"Demo failed, check debugger output for more information";
+//            }
+//        }
 
         public virtual Task EnumerateAllNearbyAnchorsAsync() { throw new NotImplementedException(); }
 
@@ -404,25 +404,23 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// <param name="target">The target.</param>
         protected override void OnSelectObjectInteraction(Vector3 hitPoint, object target)
         {
-            if (IsPlacingObject())
-            {
-                Quaternion rotation = Quaternion.AngleAxis(0, Vector3.up);
+            
+            Quaternion rotation = Quaternion.AngleAxis(0, Vector3.up);
 
-                SpawnOrMoveCurrentAnchoredObject(hitPoint, rotation);
-            }
+            SpawnOrMoveCurrentAnchoredObject(hitPoint, rotation);
+            
         }
 
         /// <summary>
         /// Called when a touch interaction occurs.
         /// </summary>
         /// <param name="touch">The touch.</param>
-        protected override void OnTouchInteraction(Touch touch)
-        {
-            if (IsPlacingObject())
-            {
-                base.OnTouchInteraction(touch);
-            }
-        }
+//        protected override void OnTouchInteraction(Touch touch)
+//        {
+//            
+//            base.OnTouchInteraction(touch);
+//            
+//        }
 
         /// <summary>
         /// Saves the current object anchor to the cloud.
