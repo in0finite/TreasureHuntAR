@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Collections.Concurrent;
 
 namespace TreasureHunt
 {
@@ -10,6 +11,8 @@ namespace TreasureHunt
     public class Logger : MonoBehaviour
     {
         StreamWriter m_outputFile;
+
+        public static ConcurrentStack<string> logMessages = new ConcurrentStack<string>();
 
 
         void Awake()
@@ -25,6 +28,12 @@ namespace TreasureHunt
         {
             m_outputFile.WriteLine(condition + "\n" + stackTrace + "\n\n\n");
             m_outputFile.Flush();
+
+            logMessages.Push(condition);
+            
+            if (logMessages.Count > 500)
+                logMessages.Clear();
+
         }
 
     }
