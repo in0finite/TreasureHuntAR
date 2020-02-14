@@ -26,6 +26,14 @@ namespace TreasureHunt
 
         protected CloudSpatialAnchorWatcher currentWatcher;
 
+        public static TreasureHuntManager Singleton { get; private set; }
+
+
+        void Awake()
+        {
+            Singleton = this;
+        }
+
         // Start is called before the first frame update
         public override void Start()
         {
@@ -65,7 +73,7 @@ namespace TreasureHunt
 
             Debug.LogFormat("Started session");
 
-            //currentWatcher = CreateWatcher();
+            currentWatcher = CreateWatcher();
 
             Debug.LogFormat("Created watcher");
             Debug.LogFormat("watcher null: {0}", currentWatcher == null);
