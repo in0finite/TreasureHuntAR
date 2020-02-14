@@ -16,7 +16,7 @@ namespace TreasureHunt
         {
             if (Application.isMobilePlatform)
             {
-                m_outputFile = new StreamWriter(Path.Combine(Application.persistentDataPath, $"TreasureHuntLog{DateTime.Now.Ticks}.txt"));
+                m_outputFile = new StreamWriter(Path.Combine(Application.persistentDataPath, $"TreasureHuntLog{DateTime.Now:HH-mm-ss-tt-zz-yyyy-M-d-dddd}.txt"));
                 Application.logMessageReceivedThreaded += this.OnLog;
             }
         }

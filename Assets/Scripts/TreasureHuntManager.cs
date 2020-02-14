@@ -12,6 +12,7 @@ namespace TreasureHunt
     public class TreasureHuntManager : InputInteractionBase
     {
         public SpatialAnchorManager CloudManager = null;
+        public AnchorExchanger anchorExchanger = new AnchorExchanger();
 
         private string currentAnchorId = "";
 
@@ -26,16 +27,28 @@ namespace TreasureHunt
         protected CloudSpatialAnchorWatcher currentWatcher;
 
         // Start is called before the first frame update
-        new async void Start()
+        public override void Start()
         {
-            
             base.Start();
 
+            //anchorExchanger.WatchKeys(BaseSharingUrl);
+
+            Invoke(nameof(Initialize), 5);
+        }
+
+        private void Initialize()
+        {
+            InitializeAsync();
+        }
+
+        private async Task InitializeAsync()
+        {
             Debug.LogFormat("Creating session");
 
             if (CloudManager.Session == null)
             {
                 await CloudManager.CreateSessionAsync();
+                await Task.Delay(TimeSpan.FromSeconds(5));
             }
 
             Debug.LogFormat("Session created");
@@ -48,16 +61,16 @@ namespace TreasureHunt
             anchorLocateCriteria.Identifiers = new string[0];
 
             await CloudManager.StartSessionAsync();
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             Debug.LogFormat("Started session");
 
-            currentWatcher = CreateWatcher();
+            //currentWatcher = CreateWatcher();
 
             Debug.LogFormat("Created watcher");
             Debug.LogFormat("watcher null: {0}", currentWatcher == null);
 
             CloudManager.AnchorLocated += CloudManager_AnchorLocated;
-
         }
 
         private void CloudManager_AnchorLocated(object sender, AnchorLocatedEventArgs args)
@@ -187,8 +200,14 @@ namespace TreasureHunt
 
                 Debug.LogFormat("saving to cloud");
 
-                Task.Run(async () => await SaveCurrentObjectAnchorToCloudAsync());
+                Invoke(nameof(SaveAnchorDelayed), 5);
+                //SaveCurrentObjectAnchorToCloudAsync();
             }
+        }
+
+        private void SaveAnchorDelayed()
+        {
+            SaveCurrentObjectAnchorToCloudAsync();
         }
 
         public bool IsPlacingObject()
@@ -219,7 +238,7 @@ namespace TreasureHunt
             CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
 
             // In this sample app we delete the cloud anchor explicitly, but here we show how to set an anchor to expire automatically
-            // cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
+            cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
 
             Debug.Log("Waiting to be ready to create");
             Debug.Log(CloudManager.SessionStatus.RecommendedForCreateProgress);
