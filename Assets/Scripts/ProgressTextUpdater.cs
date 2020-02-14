@@ -26,7 +26,7 @@ namespace TreasureHunt
 
             float? progress = TreasureHuntManager.Singleton.CloudManager?.SessionStatus?.RecommendedForCreateProgress;
 
-            this.progressText.text = "Progress: " + progress + "\n\n" + logs;
+            this.progressText.text = "Progress: " + (progress * 100) + "%\n\n" + logs;
 
         }
 

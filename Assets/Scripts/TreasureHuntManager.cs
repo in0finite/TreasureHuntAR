@@ -51,12 +51,18 @@ namespace TreasureHunt
 
         private async Task InitializeAsync()
         {
+
+            CloudManager.AnchorLocated += CloudManager_AnchorLocated;
+            CloudManager.LocateAnchorsCompleted += (arg1, arg2) => Debug.Log("locate anchors completed");
+            //CloudManager.LogDebug += (arg1, arg2) => Debug.Log(arg2.Message);
+            CloudManager.Error += (arg1, arg2) => Debug.LogError(arg2.ErrorMessage);
+
             Debug.LogFormat("Creating session");
 
             if (CloudManager.Session == null)
             {
                 await CloudManager.CreateSessionAsync();
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(1));
             }
 
             Debug.LogFormat("Session created");
@@ -69,7 +75,7 @@ namespace TreasureHunt
             anchorLocateCriteria.Identifiers = new string[0];
 
             await CloudManager.StartSessionAsync();
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(1));
 
             Debug.LogFormat("Started session");
 
@@ -78,7 +84,6 @@ namespace TreasureHunt
             Debug.LogFormat("Created watcher");
             Debug.LogFormat("watcher null: {0}", currentWatcher == null);
 
-            CloudManager.AnchorLocated += CloudManager_AnchorLocated;
         }
 
         private void CloudManager_AnchorLocated(object sender, AnchorLocatedEventArgs args)
@@ -246,7 +251,7 @@ namespace TreasureHunt
             CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
 
             // In this sample app we delete the cloud anchor explicitly, but here we show how to set an anchor to expire automatically
-            cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
+            cloudAnchor.Expiration = DateTimeOffset.Now.AddYears(200);
 
             Debug.Log("Waiting to be ready to create");
             Debug.Log(CloudManager.SessionStatus.RecommendedForCreateProgress);
@@ -257,7 +262,6 @@ namespace TreasureHunt
                 {
                     await Task.Delay(330);
                     float createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
-                    Debug.LogFormat("Create progress: {0}", createProgress);
                     //feedbackBox.text = $"Move your device to capture more environment data: {createProgress:0%}";
                 }
             }
