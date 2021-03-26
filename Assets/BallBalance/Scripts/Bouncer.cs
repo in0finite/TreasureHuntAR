@@ -21,14 +21,7 @@ public class Bouncer : MonoBehaviour
 
         _timeWhenAppliedForce = Time.time;
 
-        Vector3 newVelocity;
-
-        // if (other.rigidbody.velocity.magnitude < 0.01f)
-        //     newVelocity = this.transform.up;
-        // else
-            newVelocity = Vector3.Reflect(other.rigidbody.velocity, this.transform.up);
-
-        //other.rigidbody.AddForce(this.transform.up * this.force * other.rigidbody.velocity.magnitude, ForceMode.Impulse);
+        Vector3 newVelocity = Vector3.Reflect(other.rigidbody.velocity, this.transform.up);
         newVelocity += this.transform.up * this.force;
 
         other.rigidbody.velocity = newVelocity;
