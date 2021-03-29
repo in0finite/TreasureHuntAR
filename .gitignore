@@ -11,3 +11,4 @@
 /Build/
 *.apk
 /.idea/
+.vsconfig
