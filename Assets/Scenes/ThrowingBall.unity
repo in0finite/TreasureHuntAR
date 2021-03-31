@@ -635,7 +635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ThrowingBall: {fileID: 405614724067578539}
   Force: 10
-  NumberOfPoints: 10
+  NumberOfPoints: 20
   PointPrefab: {fileID: 2891954602306367354, guid: fc7806f8e6d63004fab239ce4ad7e6b8,
     type: 3}
 --- !u!23 &3754942628250286781
@@ -723,7 +723,7 @@ SphereCollider:
   m_GameObject: {fileID: 405614724067578538}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
