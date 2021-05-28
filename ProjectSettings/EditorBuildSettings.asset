@@ -9,5 +9,9 @@ EditorBuildSettings:
     path: Assets/Samples/Scenes/SimpleAR/SimpleAR.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
+    com.unity.xr.management.arcore_loader: {fileID: 11400000, guid: 57f7ca59eb5fdf34aab1d295ec734c4a,
+      type: 2}
+    com.unity.xr.management.arkit_loader: {fileID: 11400000, guid: 0bd16f7588c5e684ba7ecf37cce5f5d0,
+      type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 446aade4c9939954c8185676e5772328,
       type: 2}
