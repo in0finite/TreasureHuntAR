@@ -13,6 +13,7 @@ public class Ball : MonoBehaviour
     public float force = 1f;
     public Vector3 cameraOffset = new Vector3(0f, 0.2f, -0.2f);
     public float minYPos = -5f;
+    public Joystick joystick;
 
     private HashSet<Collider> _collidingColliders = new HashSet<Collider>();
     public bool IsColliding => _collidingColliders.Count > 0;
@@ -37,7 +38,27 @@ public class Ball : MonoBehaviour
             float x = Input.GetAxisRaw("Horizontal");
             float z = Input.GetAxisRaw("Vertical");
 
-            _rigidBody.AddForce(new Vector3(x, 0f, z) * this.force * Time.deltaTime, ForceMode.Impulse);
+           
+
+            if (joystick != null)
+            {
+                Vector2 vector = joystick.Direction;
+                x += vector.x;
+                z += vector.y;
+            }
+
+            var camera = Application.isEditor ? Camera.main : Camera.current;
+
+            var transformVector = camera.transform.TransformVector(new Vector3(x, 0f, z));
+
+            float length = transformVector.magnitude;
+
+            transformVector.y = 0;
+
+            transformVector = transformVector.normalized * length;
+
+            _rigidBody.AddForce(transformVector * this.force * Time.deltaTime, ForceMode.Impulse);
+
         }
 
         if (Camera.main != null)
