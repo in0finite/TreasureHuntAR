@@ -19,6 +19,8 @@ namespace Maze
             _grid = GenerateMaze(_mazeWorldSize.x, _mazeWorldSize.y, _mazeWorldSize.z, _cellSize);
 
             DrawMaze(_grid);
+
+            transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         }
 
         private Grid GenerateMaze(float width, float height, float length, float cellSize)
