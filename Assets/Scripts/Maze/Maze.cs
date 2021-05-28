@@ -14,7 +14,7 @@ namespace Maze
 
         private Grid _grid;
 
-        private void Start()
+        public void Init()
         {
             _grid = GenerateMaze(_mazeWorldSize.x, _mazeWorldSize.y, _mazeWorldSize.z, _cellSize);
 
