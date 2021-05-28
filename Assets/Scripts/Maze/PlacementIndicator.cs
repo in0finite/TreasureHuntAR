@@ -26,7 +26,7 @@ public class PlacementIndicator : MonoBehaviour
             if (hits.Count > 0)
             {
                 _visual.transform.position = hits[0].pose.position;
-                //transform.rotation = hits[0].pose.rotation;
+                _visual.transform.rotation = hits[0].pose.rotation;
 
                 if (!_visual.gameObject.activeInHierarchy)
                 {
