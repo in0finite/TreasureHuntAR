@@ -6,14 +6,14 @@ using UnityEngine.XR.ARFoundation;
 public class PlacementIndicator : MonoBehaviour
 {
     private ARRaycastManager _raycastManager;
-    [SerializeField] private Maze.Maze _maze;
+    [SerializeField] private GameObject _visual;
 
     private bool _instantiated = false;
 
     void Start()
     {
         _raycastManager = FindObjectOfType<ARRaycastManager>();
-        _maze.gameObject.SetActive(false);   
+        _visual.SetActive(false);   
     }
 
     void Update()
@@ -25,13 +25,12 @@ public class PlacementIndicator : MonoBehaviour
 
             if (hits.Count > 0)
             {
-                _maze.transform.position = hits[0].pose.position;
-                _maze.transform.rotation = hits[0].pose.rotation;
+                _visual.transform.position = hits[0].pose.position;
+                _visual.transform.rotation = hits[0].pose.rotation;
 
-                if (!_maze.gameObject.activeInHierarchy)
+                if (!_visual.activeInHierarchy)
                 {
-                    _maze.gameObject.SetActive(true);
-                    _maze.Init();
+                    _visual.SetActive(true);
                     _instantiated = true;
 
                 }

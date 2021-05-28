@@ -14,7 +14,7 @@ namespace Maze
 
         private Grid _grid;
 
-        public void Init()
+        private void Start()
         {
             _grid = GenerateMaze(_mazeWorldSize.x, _mazeWorldSize.y, _mazeWorldSize.z, _cellSize);
 
@@ -25,7 +25,7 @@ namespace Maze
 
         private Grid GenerateMaze(float width, float height, float length, float cellSize)
         {
-            var grid = new Grid(width, height, length, cellSize);
+            var grid = new Grid(width, height, length, cellSize, transform);
             CreateMazeFromGrid(grid);
 
             return grid;
@@ -63,7 +63,7 @@ namespace Maze
         private void DrawMaze(Grid grid)
         {
             var floor = Instantiate(_floorPrefab, transform);
-            floor.eulerAngles = new Vector3(90, 0, 0);
+            //floor.eulerAngles = new Vector3(90, 0, 0);
             floor.localScale = new Vector3(grid.GridWorldSize.x, grid.GridWorldSize.z, 1);
 
             for (int i = 0; i < grid.GridSize.x; i++)

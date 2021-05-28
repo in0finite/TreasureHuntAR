@@ -13,17 +13,20 @@ namespace Maze
         public Vector2Int GridSize { get; private set; }
         public float CellSize { get; private set; }
 
+        private Transform _transform;
+
         public Cell this[int x, int y]
         {
             get => _grid[x, y];
             private set => _grid[x, y] = value;
         }
 
-        public Grid(float width, float height, float length, float cellSize)
+        public Grid(float width, float height, float length, float cellSize, Transform transform)
         {
             GridWorldSize = new Vector3(width, height, length);
             CellSize = cellSize;
             GridSize = new Vector2Int(Mathf.FloorToInt(width / cellSize), Mathf.FloorToInt(length / cellSize));
+            this._transform = transform; 
 
             CreateGrid();
         }
@@ -32,15 +35,15 @@ namespace Maze
         {
             _grid = new Cell[GridSize.x, GridSize.y];
 
-            Vector3 gridBottomLeft = -Vector3.right * GridWorldSize.x / 2 + Vector3.up * GridWorldSize.y / 2 - Vector3.forward * GridWorldSize.z / 2;
+            Vector3 gridBottomLeft = -_transform.right * GridWorldSize.x / 2 + _transform.up * GridWorldSize.y / 2 - _transform.forward * GridWorldSize.z / 2;
 
             for (int i = 0; i < GridSize.x; i++)
             {
                 for (int j = 0; j < GridSize.y; j++)
                 {
                     Vector3 cellWorldPoint = gridBottomLeft +
-                        Vector3.forward * (i * CellSize + CellSize / 2) +
-                        Vector3.right * (j * CellSize + CellSize / 2);
+                        _transform.forward * (i * CellSize + CellSize / 2) +
+                        _transform.right * (j * CellSize + CellSize / 2);
 
                     Walls initial = Walls.TOP | Walls.RIGHT | Walls.BOTTOM | Walls.LEFT;
 

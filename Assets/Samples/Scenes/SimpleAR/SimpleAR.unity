@@ -794,19 +794,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add10276241391b4f85e7d57dbf60642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maze: {fileID: 1307125571}
---- !u!114 &1307125571 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6515105718498251642, guid: acc3fc4261609114f9486df0395ccc46,
+  _visual: {fileID: 1307125570}
+--- !u!1 &1307125570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6515105718498251643, guid: acc3fc4261609114f9486df0395ccc46,
     type: 3}
   m_PrefabInstance: {fileID: 581568665}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43afaf380fc18c243947cff249e82177, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1335839533
 GameObject:
   m_ObjectHideFlags: 0
