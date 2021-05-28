@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-public class PlacementIndicator : MonoBehaviour
+public class PlacementController : MonoBehaviour
 {
     private ARRaycastManager _raycastManager;
-    [SerializeField] private GameObject _visual;
-    [SerializeField] private GameObject _ball;
+    [SerializeField] private Maze.Maze _maze;
+    [SerializeField] private MazeBall _mazeBall;
 
     private bool _instantiated = false;
 
     void Start()
     {
         _raycastManager = FindObjectOfType<ARRaycastManager>();
-        _visual.SetActive(false);
-        _ball.SetActive(false);
+        _maze.gameObject.SetActive(false);
+        _mazeBall.gameObject.SetActive(false);
     }
 
     void Update()
@@ -27,16 +27,17 @@ public class PlacementIndicator : MonoBehaviour
 
             if (hits.Count > 0)
             {
-                _visual.transform.position = hits[0].pose.position;
-                _visual.transform.rotation = hits[0].pose.rotation;
+                _maze.transform.position = hits[0].pose.position;
+                _maze.transform.rotation = hits[0].pose.rotation;
 
-                if (!_visual.activeInHierarchy)
+                if (!_maze.gameObject.activeInHierarchy)
                 {
-                    _visual.SetActive(true);
-                    _ball.SetActive(true);
+                    _maze.gameObject.SetActive(true);
+                    _mazeBall.gameObject.SetActive(true);
+                    _maze.Init();
+                    _mazeBall.Init(_maze.GetRandomCellPosition());
 
                     _instantiated = true;
-
                 }
             }
         }

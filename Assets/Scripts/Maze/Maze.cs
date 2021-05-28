@@ -16,11 +16,14 @@ namespace Maze
 
         private void Start()
         {
+            //Init();
+        }
+
+        public void Init()
+        {
             _grid = GenerateMaze(_mazeWorldSize.x, _mazeWorldSize.y, _mazeWorldSize.z, _cellSize);
 
             DrawMaze(_grid);
-
-            transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         }
 
         private Grid GenerateMaze(float width, float height, float length, float cellSize)
@@ -108,6 +111,17 @@ namespace Maze
                     }
                 }
             }
+        }
+
+        public Vector3 GetRandomCellPosition()
+        {
+            var random = new System.Random(/*Seed*/);
+            var randomGridX = random.Next(0, _grid.GridSize.x);
+            var randomGridY = random.Next(0, _grid.GridSize.y);
+
+            var randomCell = _grid[randomGridX, randomGridY];
+
+            return randomCell.WorldPosition;
         }
 
         #region Debug
