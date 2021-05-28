@@ -7,13 +7,15 @@ public class PlacementIndicator : MonoBehaviour
 {
     private ARRaycastManager _raycastManager;
     [SerializeField] private GameObject _visual;
+    [SerializeField] private GameObject _ball;
 
     private bool _instantiated = false;
 
     void Start()
     {
         _raycastManager = FindObjectOfType<ARRaycastManager>();
-        _visual.SetActive(false);   
+        _visual.SetActive(false);
+        _ball.SetActive(false);
     }
 
     void Update()
@@ -31,6 +33,8 @@ public class PlacementIndicator : MonoBehaviour
                 if (!_visual.activeInHierarchy)
                 {
                     _visual.SetActive(true);
+                    _ball.SetActive(true);
+
                     _instantiated = true;
 
                 }

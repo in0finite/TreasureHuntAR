@@ -8,7 +8,6 @@ public class BallController : MonoBehaviour
     private Rigidbody _rigidbody;
     private Joystick _joystick;
 
-
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
